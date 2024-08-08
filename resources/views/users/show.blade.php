@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Dashboard') }}
+            {{ __('User list') }}
         </h2>
     </x-slot>
 
@@ -9,21 +9,20 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
-                    {{ __("You're logged in!") }}
+                    {{ __("User details") }}
                 </div>
             </div>
             <div class="mt-4">
-                <x-input-label for="task" :value="__('Task')" />
-                <x-text-input id="task" class="block mt-1 w-full"
-                    type="text"
-                    name="task"
-                    required autocomplete="task" />
-
-                <x-input-error :messages="$errors->get('task')" class="mt-2" />
+                <h3 class="text-gray-900 dark:text-gray-100">
+                    Name: {{ $user->fullname }}
+                </h3>
+                <h3 class="text-gray-900 dark:text-gray-100">
+                    Username: {{ $user->username }}
+                </h3>
+                <h3 class="text-gray-900 dark:text-gray-100">
+                    E-mail: {{ $user->email }}
+                </h3>
             </div>
-            <x-primary-button class="mt-4">
-                {{ __('+') }}
-            </x-primary-button>
         </div>
     </div>
 </x-app-layout>
