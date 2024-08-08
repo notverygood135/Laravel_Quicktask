@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Task;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
@@ -13,7 +14,9 @@ class TaskController extends Controller
      */
     public function index()
     {
-        //
+        return view('tasks.index', [
+            'tasks' => Task::where('user_id', Auth::id())->get(),
+        ]);
     }
 
     /**
@@ -29,7 +32,12 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $task = new Task;
+        $task->name = $request->name;
+        $task->user_id = Auth::id();
+        $task->save();
+
+        return redirect('/tasks');
     }
 
     /**
@@ -45,7 +53,7 @@ class TaskController extends Controller
      */
     public function edit(Task $task)
     {
-        //
+        return view('tasks/edit', compact('task'));
     }
 
     /**
@@ -53,7 +61,12 @@ class TaskController extends Controller
      */
     public function update(Request $request, Task $task)
     {
-        //
+        Task::where('id', $task->id)
+            ->update([
+                'name' => $request->name,
+            ]);
+        
+        return redirect('/tasks');
     }
 
     /**
@@ -61,6 +74,8 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
-        //
+        $task->delete();
+
+        return redirect('/tasks');
     }
 }
