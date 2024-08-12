@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -14,7 +15,11 @@ class UserController extends Controller
     public function index()
     {
         return view('users.index', [
-            'users' => User::all(),
+            // eager loading
+            'users' => User::with('tasks')->get(),
+
+            // lazy loading
+            // 'users' => User::all(),
         ]);
     }
 
@@ -23,7 +28,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        return view('users.create');
     }
 
     /**
@@ -31,7 +36,16 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $user = new User;
+        $user->first_name = $request->first_name;
+        $user->last_name = $request->last_name;
+        $user->username = $request->username;
+        $user->email = $request->email;
+        $user->password = $request->password;
+        $user->is_admin = false;
+        $user->is_active = true;
+        $user->save();
+        return redirect('/users');
     }
 
     /**
@@ -55,10 +69,20 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        $user->username = $request->name;
-        $user->save();
+        // $user->username = $request->name;
+        // $user->save();
 
-        return back();
+        User::where('id', $user->id)
+            ->update([
+                'username' => $request->name,
+            ]);
+
+        // DB::table('users')->where('id', $user->id)
+        //     ->update([
+        //         'username' => $request->name,
+        //     ]);
+
+        return redirect('/users');
     }
 
     /**
@@ -66,6 +90,8 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        //
+        $user->delete();
+
+        return redirect('/users');
     }
 }
