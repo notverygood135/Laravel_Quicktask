@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
@@ -27,6 +28,12 @@ Route::resource('/users', UserController::class)
 );
 
 Route::resource('/tasks', TaskController::class);
+
+Route::middleware('admin')->group(function () {
+    Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
+    Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
+    Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
+});
 
 Route::get('language/{lang}', [LanguageController::class, 'changeLanguage'])->name('locale');
 
